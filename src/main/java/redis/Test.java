@@ -1,8 +1,5 @@
 package redis;
 
-/**
- * Created by liuyang on 2017/4/20.
- */
 public class Test {
     public static void main(String[] args) {
         Service service = new Service();

@@ -2,7 +2,6 @@ package zookeeper;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,9 +11,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-/**
- * Created by liuyang on 2017/4/20.
- */
 public class DistributedLock implements Lock, Watcher {
     private ZooKeeper zk = null;
     // 根节点
@@ -106,7 +102,6 @@ public class DistributedLock implements Lock, Watcher {
             if (CURRENT_LOCK.equals(ROOT_LOCK + "/" + lockObjects.get(0))) {
                 return true;
             }
-
             // 若不是最小节点，则找到自己的前一个节点
             String prevNode = CURRENT_LOCK.substring(CURRENT_LOCK.lastIndexOf("/") + 1);
             WAIT_LOCK = lockObjects.get(Collections.binarySearch(lockObjects, prevNode) - 1);
@@ -133,7 +128,6 @@ public class DistributedLock implements Lock, Watcher {
     // 等待锁
     private boolean waitForLock(String prev, long waitTime) throws KeeperException, InterruptedException {
         Stat stat = zk.exists(ROOT_LOCK + "/" + prev, true);
-
         if (stat != null) {
             System.out.println(Thread.currentThread().getName() + "等待锁 " + ROOT_LOCK + "/" + prev);
             this.countDownLatch = new CountDownLatch(1);
@@ -165,7 +159,6 @@ public class DistributedLock implements Lock, Watcher {
     public void lockInterruptibly() throws InterruptedException {
         this.lock();
     }
-
 
     public class LockException extends RuntimeException {
         private static final long serialVersionUID = 1L;

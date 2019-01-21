@@ -4,13 +4,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 import redis.clients.jedis.exceptions.JedisException;
-
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by liuyang on 2017/4/20.
- */
 public class DistributedLock {
     private final JedisPool jedisPool;
 
@@ -25,8 +21,7 @@ public class DistributedLock {
      * @param timeout   锁的超时时间
      * @return 锁标识
      */
-    public String lockWithTimeout(String locaName,
-                                  long acquireTimeout, long timeout) {
+    public String lockWithTimeout(String locaName, long acquireTimeout, long timeout) {
         Jedis conn = null;
         String retIdentifier = null;
         try {
@@ -38,7 +33,6 @@ public class DistributedLock {
             String lockKey = "lock:" + locaName;
             // 超时时间，上锁后超过此时间则自动释放锁
             int lockExpire = (int)(timeout / 1000);
-
             // 获取锁的超时时间，超过这个时间则放弃获取锁
             long end = System.currentTimeMillis() + acquireTimeout;
             while (System.currentTimeMillis() < end) {
@@ -52,7 +46,6 @@ public class DistributedLock {
                 if (conn.ttl(lockKey) == -1) {
                     conn.expire(lockKey, lockExpire);
                 }
-
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -79,7 +72,7 @@ public class DistributedLock {
         Jedis conn = null;
         String lockKey = "lock:" + lockName;
         boolean retFlag = false;
-        try {
+            try {
             conn = jedisPool.getResource();
             while (true) {
                 // 监视lock，准备开始事务
